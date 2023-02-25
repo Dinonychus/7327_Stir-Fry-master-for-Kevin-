@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
@@ -11,9 +13,13 @@ import frc.robot.subsystems.DriveTrain;
 public class Auto1 extends CommandBase {
   /** Creates a new Auto1. */
   private final DriveTrain driveTrain;
+  private final DoubleSupplier moveSpeed;
+  private final DoubleSupplier rotateSpeed;
 
-  public Auto1(DriveTrain driveTrain) {
+  public Auto1(DriveTrain driveTrain, DoubleSupplier moveSpeed, DoubleSupplier rotateSpeed) {
 
+    this.moveSpeed = moveSpeed;
+    this.rotateSpeed = rotateSpeed;
     this.driveTrain = driveTrain;
     addRequirements(driveTrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,7 +31,12 @@ public class Auto1 extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double realMoveSpeed = moveSpeed.getAsDouble();
+    double realRotateSpeed = rotateSpeed.getAsDouble();
+
+    driveTrain.setArcadeSpeed(realMoveSpeed, realRotateSpeed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
